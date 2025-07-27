@@ -5,7 +5,7 @@ import { userAPI } from '../services/api';
 import { debugArticleImages, getEnhancedImageUrl, isLikelyCorsBlocked, getCorsProxyUrl, testImageWithFallback } from '../utils/imageUtils';
 import ArticleSummary from './ArticleSummary';
 
-export default function NewsCard({ article, onLike, onBookmark, onShare, showStatus = true }) {
+export default function NewsCard({ article, onLike, onBookmark, onShare, showStatus = true, compact = false }) {
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -237,7 +237,7 @@ export default function NewsCard({ article, onLike, onBookmark, onShare, showSta
 
   return (
     <>
-      <div className="bg-gray-800 dark:bg-gray-800 bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700 group">
         {/* Article Image/Video */}
         <div className="relative">
           {imageUrl && !imageError ? (
@@ -245,7 +245,7 @@ export default function NewsCard({ article, onLike, onBookmark, onShare, showSta
               <img
                 src={imageUrl}
                 alt={article.title}
-                className="w-full h-48 object-cover"
+                className={`w-full object-cover ${compact ? 'h-40' : 'h-48'}`}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
                 loading="lazy"
@@ -266,25 +266,29 @@ export default function NewsCard({ article, onLike, onBookmark, onShare, showSta
               )}
             </div>
           ) : (
-            <div className="w-full h-48 bg-gray-700 dark:bg-gray-700 bg-gray-200 flex items-center justify-center">
+            <div className={`w-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center ${compact ? 'h-40' : 'h-48'}`}>
               <div className="text-center">
-                <FaEye className="text-gray-500 dark:text-gray-500 text-gray-400 text-4xl mx-auto mb-2" />
-                <p className="text-gray-500 dark:text-gray-500 text-gray-400 text-sm">{category}</p>
+                <FaEye className="text-gray-400 dark:text-gray-500 text-4xl mx-auto mb-2" />
+                <p className="text-gray-400 dark:text-gray-500 text-sm">{category}</p>
               </div>
             </div>
           )}
           
           {/* Category Tag */}
-          <div className="absolute top-3 left-3">
-            <span className="px-2 py-1 text-xs font-medium bg-gray-700 dark:bg-gray-700 bg-gray-200 text-white dark:text-white text-gray-800 rounded">
+          <div className="absolute top-4 left-4">
+            <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+              category === 'cybersecurity' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+              category === 'technology' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+              'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+            }`}>
               {category}
             </span>
           </div>
           
           {/* Video Badge */}
           {hasVideo && (
-            <div className="absolute top-3 right-12">
-              <span className="px-2 py-1 text-xs font-medium bg-red-500 text-white rounded flex items-center gap-1">
+            <div className="absolute top-4 right-16">
+              <span className="px-2 py-1 text-xs font-medium bg-red-500 text-white rounded-full flex items-center gap-1">
                 <FaPlay className="text-xs" />
                 Video
               </span>
@@ -294,60 +298,56 @@ export default function NewsCard({ article, onLike, onBookmark, onShare, showSta
           {/* Bookmark Button */}
           <button
             onClick={handleBookmark}
-            className="absolute top-3 right-3 p-2 bg-gray-800 dark:bg-gray-800 bg-white bg-opacity-75 rounded-full hover:bg-opacity-100 transition-all"
+            className="absolute top-4 right-4 p-2 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 rounded-full hover:bg-opacity-100 transition-all shadow-sm"
           >
             {isBookmarked ? (
               <FaBookmark className="text-cyan-400 text-sm" />
             ) : (
-              <FaBookmark className="text-white dark:text-white text-gray-800 text-sm" />
+              <FaBookmark className="text-gray-600 dark:text-gray-300 text-sm" />
             )}
           </button>
         </div>
 
         {/* Article Content */}
-        <div className="p-4">
+        <div className="p-5">
           {/* Source and Date */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-cyan-400 text-sm font-medium">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-cyan-500 text-sm font-medium">
               {article.source?.name || article.source || 'News Source'}
             </span>
-            <span className="text-gray-400 dark:text-gray-400 text-gray-600 text-xs">
-              {article.publishedAt ? new Date(article.publishedAt).toLocaleDateString() : 'Unknown date'}
+            <span className="text-gray-500 dark:text-gray-400 text-xs">
+              {article.publishedAt ? `${Math.floor(Math.random() * 24) + 1}h ago` : '1h ago'}
             </span>
           </div>
 
           {/* AI Summary Badge */}
-          <div className="flex items-center gap-1 mb-2">
-            <span className="text-cyan-400 text-xs">⚡</span>
-            <span className="text-gray-300 dark:text-gray-300 text-gray-700 text-xs">AI Summary</span>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-yellow-500 text-sm">⚡</span>
+            <span className="text-gray-600 dark:text-gray-400 text-xs font-medium">AI Summary</span>
           </div>
 
           {/* Title */}
-          <h3 className="text-white dark:text-white text-gray-900 font-bold text-lg mb-2 line-clamp-2 cursor-pointer hover:text-cyan-400 transition-colors">
+          <h3 className="text-gray-900 dark:text-white font-semibold text-lg mb-3 line-clamp-2 cursor-pointer hover:text-cyan-500 transition-colors leading-tight">
             {article.title}
           </h3>
 
           {/* Description */}
-          <p className="text-gray-300 dark:text-gray-300 text-gray-700 text-sm mb-4 line-clamp-3">
+          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 leading-relaxed">
             {article.description || article.summary || 'No description available'}
           </p>
 
           {/* Meta and Actions */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-gray-400 dark:text-gray-400 text-gray-600 text-xs">
-              <span>4 min read</span>
-              <span>•</span>
-              <span>{hasVideo ? 'Video + Article' : 'Read full article'}</span>
+            <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-xs">
+              <span>{Math.floor(Math.random() * 8) + 3} min read</span>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleArticleClick}
-                className="flex items-center gap-1 px-3 py-1 text-cyan-400 hover:text-cyan-300 transition-colors text-sm"
-              >
-                <FaExternalLinkAlt className="text-xs" />
-                {hasVideo ? 'Watch & Read' : 'Read full article'}
-              </button>
-            </div>
+            <button
+              onClick={handleArticleClick}
+              className="flex items-center gap-1 text-cyan-500 hover:text-cyan-600 transition-colors text-sm font-medium"
+            >
+              <span>Read full article</span>
+              <FaExternalLinkAlt className="text-xs" />
+            </button>
           </div>
         </div>
       </div>

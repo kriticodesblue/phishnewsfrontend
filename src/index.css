@@ -6,8 +6,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #1a1a1a;
+  color: #1f2937;
+  background-color: #f9fafb;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,14 +17,14 @@
 
 /* Light mode styles */
 :root:not(.dark) {
-  color: #213547;
-  background-color: #ffffff;
+  color: #1f2937;
+  background-color: #f9fafb;
 }
 
 /* Dark mode styles */
 :root.dark {
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #1a1a1a;
+  color: #f9fafb;
+  background-color: #111827;
 }
 
 a {
@@ -38,18 +38,16 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #ffffff;
-  color: #213547;
+  background-color: #f9fafb;
+  color: #1f2937;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 body.dark {
-  background-color: #1a1a1a;
-  color: #ffffff;
+  background-color: #111827;
+  color: #f9fafb;
 }
 
 h1 {
@@ -64,8 +62,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #374151;
-  color: #ffffff;
+  background-color: #f3f4f6;
+  color: #374151;
   cursor: pointer;
   transition: border-color 0.25s, background-color 0.2s ease, color 0.2s ease;
 }
@@ -81,6 +79,12 @@ button:focus-visible {
 :root:not(.dark) button {
   background-color: #f3f4f6;
   color: #374151;
+}
+
+/* Dark mode button styles */
+:root.dark button {
+  background-color: #374151;
+  color: #ffffff;
 }
 
 /* Utility classes for line clamping */
@@ -104,11 +108,11 @@ button:focus-visible {
 }
 
 ::-webkit-scrollbar-track {
-  background: #374151;
+  background: #f3f4f6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #6b7280;
+  background: #d1d5db;
   border-radius: 4px;
 }
 
@@ -116,7 +120,20 @@ button:focus-visible {
   background: #9ca3af;
 }
 
-/* Light mode scrollbar */
+/* Dark mode scrollbar */
+:root.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+:root.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+:root.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Light mode scrollbar (default above) */
 :root:not(.dark) ::-webkit-scrollbar-track {
   background: #f3f4f6;
 }
@@ -134,23 +151,36 @@ button:focus-visible {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Additional utility classes for theme switching */
-.bg-theme-primary {
-  @apply bg-gray-900 dark:bg-gray-900 bg-white;
+/* Smooth transitions for all elements */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.bg-theme-secondary {
-  @apply bg-gray-800 dark:bg-gray-800 bg-gray-100;
+/* Focus styles */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #06b6d4;
+  outline-offset: 2px;
 }
 
-.text-theme-primary {
-  @apply text-white dark:text-white text-gray-900;
+/* Card hover effects */
+.group:hover {
+  transform: translateY(-2px);
 }
 
-.text-theme-secondary {
-  @apply text-gray-300 dark:text-gray-300 text-gray-700;
+/* Improved typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.25;
 }
 
-.border-theme {
-  @apply border-gray-700 dark:border-gray-700 border-gray-200;
+p {
+  line-height: 1.6;
+}
+
+/* Better spacing for content */
+.prose {
+  max-width: none;
 }
